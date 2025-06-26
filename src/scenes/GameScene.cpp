@@ -2,7 +2,17 @@
 #include "../Game.hpp"
 #include "../core/NodeEngine.hpp"
 
-NodeEngine node_engine = {RVector2(500, 500)};
+Vector2& operator+=(Vector2& lhs, const RVector2& rhs) {
+  lhs.x += rhs.x;
+  lhs.y += rhs.y;
+  return lhs;
+}
+
+NodeEngine node_engine = {
+  //RVector2(100)
+};
+
+
 
 void GameScene::InitName() {
   this->name = "GameScene";
@@ -20,6 +30,9 @@ void GameScene::Leave() {
 
 void GameScene::Update() {
   node_engine.Update();
+
+  if (RMouse::IsButtonDown(MOUSE_BUTTON_MIDDLE))
+    node_engine.camera.target += RMouse::GetDelta().Negate();
 }
 void GameScene::Render() {
   node_engine.Render();

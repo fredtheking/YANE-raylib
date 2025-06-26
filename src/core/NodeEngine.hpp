@@ -7,8 +7,8 @@ class NodeEngine : public IScript {
   RVector2 size;
   RColor bg_color;
   RColor grid_color;
-  RCamera2D camera;
 
+  void ResetCamera();
   void DrawViewportBackground() const;
   void DrawViewportGrid2D() const;
 
@@ -19,7 +19,8 @@ public:
     RColor grid_color = RColor::Gray()
     );
 
-  static const int GRID_SPACING = 10;
+  static const int GRID_SPACING = 16;
+  RCamera2D camera;
 
   void Begin() override;
   void Enter() override;
