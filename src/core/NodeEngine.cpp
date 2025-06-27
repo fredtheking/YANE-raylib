@@ -60,6 +60,8 @@ void NodeEngine::Leave() {
 void NodeEngine::Update() {
   if (Game::Instance().window->IsResized())
     RecalculateCameraOffset();
+
+  this->camera.target = static_cast<RVector2>(this->camera.target).Clamp(RVector2(-BORDER_LIMIT, -BORDER_LIMIT), RVector2(BORDER_LIMIT, BORDER_LIMIT));
 }
 void NodeEngine::Render() {
   this->camera.BeginMode();

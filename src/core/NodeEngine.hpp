@@ -3,6 +3,7 @@
 #include "../utils/interfaces/IScript.hpp"
 
 class NodeEngine : public IScript {
+  const int BORDER_LIMIT = 6000000;
   RColor bg_color;
   RColor grid_color;
 
