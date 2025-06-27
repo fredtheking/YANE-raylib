@@ -12,15 +12,15 @@ Vector2& operator+=(Vector2& lhs, const RVector2& rhs) {
 }
 
 NodeEngine node_engine = {};
-RVector2 dragOriginWorld;
+RVector2 drag_origin_world;
 
 void MoveCamera(RCamera2D& camera) {
   if (RMouse::IsButtonPressed(MOUSE_BUTTON_MIDDLE))
-    dragOriginWorld = camera.GetScreenToWorld(RMouse::GetPosition());
+    drag_origin_world = camera.GetScreenToWorld(RMouse::GetPosition());
 
   if (RMouse::IsButtonDown(MOUSE_BUTTON_MIDDLE)) {
-    RVector2 currentWorld = camera.GetScreenToWorld(RMouse::GetPosition());
-    camera.target += dragOriginWorld - currentWorld;
+    RVector2 current_world = camera.GetScreenToWorld(RMouse::GetPosition());
+    camera.target += drag_origin_world - current_world;
   }
 
   camera.target = RVector2(round(camera.target.x), round(camera.target.y));

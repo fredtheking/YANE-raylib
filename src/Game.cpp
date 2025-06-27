@@ -7,6 +7,7 @@ void Game::Setup(size_t start_scene_index) {
   this->window->SetConfigFlags(FLAG_WINDOW_ALWAYS_RUN | FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
   this->window = new RWindow(1920, 1080, "Node Editor");
   this->audioDevice = new RAudioDevice();
+  this->window->SetTargetFPS(60);
 
   for (const std::shared_ptr<SceneBase>& scene: SceneManager::Instance().scenes_collection) {
     scene->InitName();
