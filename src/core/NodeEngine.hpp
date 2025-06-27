@@ -3,10 +3,10 @@
 #include "../utils/interfaces/IScript.hpp"
 
 class NodeEngine : public IScript {
-  bool size_infinite;
-  RVector2 size;
   RColor bg_color;
   RColor grid_color;
+
+  void RecalculateCameraOffset();
 
   void ResetCamera();
   void DrawViewportBackground() const;
@@ -14,7 +14,6 @@ class NodeEngine : public IScript {
 
 public:
   NodeEngine(
-    RVector2 size = RVector2::One().Negate(),
     RColor bg_color = RColor::DarkGray(),
     RColor grid_color = RColor::Gray()
     );
