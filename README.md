@@ -35,4 +35,4 @@ xmake project -k cmake -y
 
 ## 📄 License: Custom "Personal Use Only" License  
 You may compile and modify the code for yourself, but cannot redistribute builds or use it commercially.  
-See [LICENSE.txt](LICENSE.md) for details.
+See [LICENCE.md](LICENCE.md) for details.
