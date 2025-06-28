@@ -23,20 +23,45 @@ void NodeEngine::DrawViewportBackground() const {
 }
 
 void NodeEngine::DrawViewportGrid2D() const {
-  Vector2 determined_start = this->camera.GetScreenToWorld(RVector2::Zero());
-  Vector2 determined_end = this->camera.GetScreenToWorld(Game::Instance().window->GetSize());
+  Vector2 topLeft = this->camera.GetScreenToWorld(RVector2::Zero());
+  Vector2 bottomRight = this->camera.GetScreenToWorld(Game::Instance().window->GetSize());
 
-  int startX = (int)(determined_start.x / GRID_SPACING - 1) * GRID_SPACING;
-  int endX   = (int)(determined_end.x   / GRID_SPACING + 1) * GRID_SPACING;
+  constexpr float intensity = 1.0f;
+  float time = Game::Instance().window->GetTime();
 
-  int startY = (int)(determined_start.y / GRID_SPACING - 1) * GRID_SPACING;
-  int endY   = (int)(determined_end.y   / GRID_SPACING + 1) * GRID_SPACING;
+  int startX = static_cast<int>(std::floor(topLeft.x / GRID_SPACING)) * GRID_SPACING;
+  int endX   = static_cast<int>(std::ceil(bottomRight.x / GRID_SPACING)) * GRID_SPACING;
 
-  for (int x = startX; x < endX; x += GRID_SPACING)
-    DrawLine(x, startY, x, endY, this->grid_color);
+  int startY = static_cast<int>(std::floor(topLeft.y / GRID_SPACING)) * GRID_SPACING;
+  int endY   = static_cast<int>(std::ceil(bottomRight.y / GRID_SPACING)) * GRID_SPACING;
 
-  for (int y = startY; y < endY; y += GRID_SPACING)
-    DrawLine(startX, y, endX, y, this->grid_color);
+  for (int x = startX, i = 0; x <= endX; x += GRID_SPACING, ++i) {
+    float offset = sinf(time * 2.0f + i) * intensity;
+    this->grid_color.DrawLine(
+      { x + offset, topLeft.y },
+      { x + offset, bottomRight.y }
+    );
+  }
+
+  for (int y = startY, i = 0; y <= endY; y += GRID_SPACING, ++i) {
+    float offset = sinf(time * 1.2f + i) * intensity;
+    this->grid_color.DrawLine(
+      { topLeft.x, y + offset },
+      { bottomRight.x, y + offset }
+    );
+  }
+
+
+
+  RColor::Red().Alpha(0.35).DrawLine(
+    { 0.0f, topLeft.y },
+    { 0.0f, bottomRight.y }
+  );
+
+  RColor::Blue().Alpha(0.35).DrawLine(
+    { topLeft.x, 0.0f },
+    { bottomRight.x, 0.0f }
+  );
 }
 
 

@@ -11,7 +11,7 @@ Vector2& operator+=(Vector2& lhs, const RVector2& rhs) {
   return lhs;
 }
 
-NodeEngine node_engine = {};
+NodeEngine node_engine = {RColor::Black(), RColor{13, 13, 13}};
 RVector2 drag_origin_world;
 
 void MoveCamera(RCamera2D& camera) {
@@ -22,8 +22,6 @@ void MoveCamera(RCamera2D& camera) {
     RVector2 current_world = camera.GetScreenToWorld(RMouse::GetPosition());
     camera.target += drag_origin_world - current_world;
   }
-
-  camera.target = RVector2(round(camera.target.x), round(camera.target.y));
 }
 
 void GameScene::InitName() {
@@ -48,8 +46,8 @@ void GameScene::Update() {
   if (RMouse::IsButtonDown(MOUSE_BUTTON_MIDDLE))
     node_engine.camera.target += RMouse::GetDelta().Negate() / node_engine.camera.zoom;
 
-  node_engine.camera.zoom += RMouse::GetWheelMoveV().y * 300 * Game::Instance().window->GetFrameTime();
-  node_engine.camera.zoom = std::clamp<float>(node_engine.camera.zoom, 0.5, 3);
+  node_engine.camera.zoom += RMouse::GetWheelMoveV().y * 0.1f;
+  node_engine.camera.zoom = std::clamp<float>(node_engine.camera.zoom, 0.5, 3.0);
 
   constexpr int KEY_SKIP_SPEED = 1000000;
   if (RKeyboard::IsKeyPressed(KEY_LEFT))  node_engine.camera.target += RVector2(-KEY_SKIP_SPEED, 0);
