@@ -26,8 +26,8 @@ void NodeEngine::DrawViewportGrid2D() const {
   Vector2 topLeft = this->camera.GetScreenToWorld(RVector2::Zero());
   Vector2 bottomRight = this->camera.GetScreenToWorld(Game::Instance().window->GetSize());
 
-  constexpr float intensity = 1.0f;
-  float time = Game::Instance().window->GetTime();
+  constexpr float intensity = 0.4f;
+  float time = Game::Instance().window->GetTime() / 2;
 
   int startX = static_cast<int>(std::floor(topLeft.x / GRID_SPACING)) * GRID_SPACING;
   int endX   = static_cast<int>(std::ceil(bottomRight.x / GRID_SPACING)) * GRID_SPACING;
