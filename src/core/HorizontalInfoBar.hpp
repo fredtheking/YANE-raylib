@@ -1,9 +1,11 @@
 #pragma once
+#include "MouseHitbox.hpp"
 #include "../Game.hpp"
 #include "../utils/interfaces/IScript.hpp"
 
 class HorizontalInfoBar : public IScript {
   friend class NodeEngine;
+  const RCamera2D* camera;
   static constexpr float BAR_HEIGHT = 50;
 
   bool active = false;
@@ -13,6 +15,9 @@ class HorizontalInfoBar : public IScript {
 
   RColor bg_color;
   RColor outline_color;
+  MouseHitbox mouse_hitbox;
+
+  void RecsUpdate() const;
 public:
   HorizontalInfoBar(
     RColor bg_color = RColor::DarkGray(),

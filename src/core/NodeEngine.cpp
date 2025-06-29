@@ -70,6 +70,7 @@ NodeEngine::NodeEngine(RColor bg_color, RColor grid_color) {
   this->bg_color = bg_color;
   this->grid_color = grid_color;
   this->infobar = { bg_color, RColor::LightGray() };
+  this->infobar.camera = &this->camera;
 }
 void NodeEngine::Init() {
   infobar.Init();
