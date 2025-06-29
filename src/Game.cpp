@@ -11,7 +11,7 @@ void Game::Setup(size_t start_scene_index) {
 
   for (const std::shared_ptr<SceneBase>& scene: SceneManager::Instance().scenes_collection) {
     scene->InitName();
-    scene->Begin();
+    scene->Init();
   }
 
   SceneManager::Instance().Change(start_scene_index);

@@ -1,8 +1,7 @@
 #include "NodeEngine.hpp"
-
 #include "../Game.hpp"
 
-RVector2 GetCameraNewOffset() {
+static RVector2 GetCameraNewOffset() {
   return Game::Instance().window->GetSize()/2;
 }
 
@@ -26,14 +25,14 @@ void NodeEngine::DrawViewportGrid2D() const {
   Vector2 topLeft = this->camera.GetScreenToWorld(RVector2::Zero());
   Vector2 bottomRight = this->camera.GetScreenToWorld(Game::Instance().window->GetSize());
 
-  constexpr float intensity = 0.4f;
+  constexpr float intensity = 0.5;
   float time = Game::Instance().window->GetTime() / 2;
 
-  int startX = static_cast<int>(std::floor(topLeft.x / GRID_SPACING)) * GRID_SPACING;
-  int endX   = static_cast<int>(std::ceil(bottomRight.x / GRID_SPACING)) * GRID_SPACING;
+  int startX = static_cast<int>(std::floor(topLeft.x    / GRID_SPACING + 1)) * GRID_SPACING;
+  int endX   = static_cast<int>(std::ceil(bottomRight.x / GRID_SPACING - 1)) * GRID_SPACING;
 
-  int startY = static_cast<int>(std::floor(topLeft.y / GRID_SPACING)) * GRID_SPACING;
-  int endY   = static_cast<int>(std::ceil(bottomRight.y / GRID_SPACING)) * GRID_SPACING;
+  int startY = static_cast<int>(std::floor(topLeft.y    / GRID_SPACING + 1)) * GRID_SPACING;
+  int endY   = static_cast<int>(std::ceil(bottomRight.y / GRID_SPACING - 1)) * GRID_SPACING;
 
   for (int x = startX, i = 0; x <= endX; x += GRID_SPACING, ++i) {
     float offset = sinf(time * 2.0f + i) * intensity;
@@ -70,19 +69,22 @@ void NodeEngine::DrawViewportGrid2D() const {
 NodeEngine::NodeEngine(RColor bg_color, RColor grid_color) {
   this->bg_color = bg_color;
   this->grid_color = grid_color;
+  this->infobar = { bg_color, RColor::LightGray() };
 }
-void NodeEngine::Begin() {
+void NodeEngine::Init() {
+  infobar.Init();
   ResetCamera();
 }
 
 void NodeEngine::Enter() {
-
+  infobar.Enter();
 }
 void NodeEngine::Leave() {
-
+  infobar.Leave();
 }
 
 void NodeEngine::Update() {
+  infobar.Update();
   if (Game::Instance().window->IsResized())
     RecalculateCameraOffset();
 
@@ -94,4 +96,5 @@ void NodeEngine::Render() {
   this->DrawViewportGrid2D();
   this->camera.EndMode();
   RColor::Green().DrawText(RVector2(this->camera.GetTarget()).ToString(), 10, 70, 20);
+  infobar.Render();
 }

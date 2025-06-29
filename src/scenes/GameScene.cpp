@@ -27,8 +27,8 @@ void MoveCamera(RCamera2D& camera) {
 void GameScene::InitName() {
   this->name = "GameScene";
 }
-void GameScene::Begin() {
-  node_engine.Begin();
+void GameScene::Init() {
+  node_engine.Init();
 }
 
 void GameScene::Enter() {

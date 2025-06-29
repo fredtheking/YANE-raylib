@@ -3,7 +3,7 @@
 void MenuScene::InitName() {
   this->name = "MenuScene";
 }
-void MenuScene::Begin() {
+void MenuScene::Init() {
 
 }
 

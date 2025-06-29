@@ -10,7 +10,7 @@ public:
   virtual ~SceneBase() = default;
 
   virtual void InitName();
-  void Begin() override;
+  void Init() override;
 
   void Enter() override;
   void Leave() override;

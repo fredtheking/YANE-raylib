@@ -4,7 +4,7 @@
 class GameScene : public SceneBase {
 public:
   void InitName() override;
-  void Begin() override;
+  void Init() override;
 
   void Enter() override;
   void Leave() override;

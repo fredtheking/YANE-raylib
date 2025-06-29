@@ -1,7 +1,7 @@
 #include "SceneBase.hpp"
 
 void SceneBase::InitName() { this->name = "BaseSceneName"; }
-void SceneBase::Begin() {}
+void SceneBase::Init() {}
 
 void SceneBase::Enter() {}
 void SceneBase::Leave() {}

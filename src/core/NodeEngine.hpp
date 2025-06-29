@@ -1,9 +1,10 @@
 #pragma once
 #include <raylib-cpp/raylib-cpp.hpp>
+#include "HorizontalInfoBar.hpp"
 #include "../utils/interfaces/IScript.hpp"
 
-class NodeEngine : public IScript {
-  const int BORDER_LIMIT = 6000000;
+class NodeEngine final : public IScript {
+  static constexpr int BORDER_LIMIT = 6000000;
   RColor bg_color;
   RColor grid_color;
 
@@ -17,12 +18,13 @@ public:
   NodeEngine(
     RColor bg_color = RColor::DarkGray(),
     RColor grid_color = RColor::Gray()
-    );
+  );
 
   static const int GRID_SPACING = 16;
   RCamera2D camera;
+  HorizontalInfoBar infobar;
 
-  void Begin() override;
+  void Init() override;
   void Enter() override;
   void Leave() override;
   void Update() override;
