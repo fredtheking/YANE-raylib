@@ -1,25 +1,30 @@
 #pragma once
+#include <functional>
 #include <raylib-cpp/raylib-cpp.hpp>
 #include "../utils/interfaces/IScript.hpp"
 
 class MouseHitbox : public IScript {
-  const RCamera2D* camera;
   RColor debug_color;
+  bool overlay = true;
 
+  bool (*DeterminedHoverHandle)(MouseHitbox*);
+  void (*DeterminedHitboxTextureUpdate)(MouseHitbox*);
+  void (*DeterminedRender)(MouseHitbox*);
+
+  bool DragHandle(int i) const;
+
+public:
+  const RCamera2D* camera;
   RRectangle rec;
   std::vector<RRectangle> exclude_recs;
   RTexture2D hitbox_texture;
 
-  bool HoverHandle() const;
-  bool DragHandle(int i) const;
-  void HitboxTextureUpdate();
-
-public:
   MouseHitbox() = default;
   MouseHitbox(
     const RCamera2D* camera,
     RRectangle rec,
-    const std::vector<RRectangle> &exclude_recs
+    const std::vector<RRectangle> &exclude_recs,
+    bool overlay = true
   );
 
   void Init() override;
