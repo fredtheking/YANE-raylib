@@ -36,7 +36,9 @@ void HorizontalInfoBar::Init() {
   this->rest_pos_y = this->pos_y = height;
 
   RecsUpdate();
-  this->mouse_hitbox = MouseHitbox(this->camera, tab_rec - RRectangle(0, 0, 0, 10 - LINE_THICK), {});
+  this->mouse_hitbox = MouseHitbox(this->camera, tab_rec - RRectangle(0, 0, 0, 10 - LINE_THICK), {
+    RRectangle(0, 0, 8, tab_rec.height / 2)
+  });
   this->mouse_hitbox.Init();
 }
 

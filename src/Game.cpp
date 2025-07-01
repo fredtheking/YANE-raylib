@@ -3,11 +3,20 @@
 #include "managers/PendingChangesManager.hpp"
 #include "managers/SceneManager.hpp"
 
+#if defined(_DEBUG) || !defined(NDEBUG)
+    #define only_debug(...) do { __VA_ARGS__ } while (0)
+#else
+    #define only_debug(...) do {} while (0)
+#endif
+
+
 void Game::Setup(size_t start_scene_index) {
   this->window->SetConfigFlags(FLAG_WINDOW_ALWAYS_RUN | FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
   this->window = new RWindow(1920, 1080, "Node Editor");
   this->audioDevice = new RAudioDevice();
   //this->window->SetTargetFPS(60);
+
+  only_debug( this->debug_mode = true; );
 
   for (const std::shared_ptr<SceneBase>& scene: SceneManager::Instance().scenes_collection) {
     scene->InitName();
@@ -44,10 +53,14 @@ void Game::Run(size_t start_scene_index) {
 
 
 void Game::Update() {
-  if (RKeyboard::IsKeyPressed(KEY_F1))
-    SceneManager::Instance().Previous();
-  if (RKeyboard::IsKeyPressed(KEY_F2))
-    SceneManager::Instance().Next();
+  only_debug(
+    if (RKeyboard::IsKeyPressed(KEY_F1))
+      SceneManager::Instance().Previous();
+    if (RKeyboard::IsKeyPressed(KEY_F2))
+      SceneManager::Instance().Next();
+    if (RKeyboard::IsKeyPressed(KEY_F3) || RKeyboard::IsKeyPressed(KEY_GRAVE))
+      this->debug_mode = !this->debug_mode;
+  );
 
   SceneManager::Instance().current_scene->Update();
 }

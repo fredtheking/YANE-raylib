@@ -1,7 +1,7 @@
 #pragma once
 #include "../utils/SceneBase.hpp"
 
-class MenuScene : public SceneBase {
+class TestScene : public SceneBase {
 public:
   void InitName() override;
   void Init() override;

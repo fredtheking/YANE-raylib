@@ -20,6 +20,7 @@ public:
     return singleton;
   }
 
+  bool debug_mode;
   RWindow* window;
   RAudioDevice* audioDevice;
 

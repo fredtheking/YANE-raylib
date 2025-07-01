@@ -1,27 +1,41 @@
 #include "MouseHitbox.hpp"
 #include <algorithm>
 
+#include "../Game.hpp"
+
+#define s_to_w(vec2) (this->camera->GetScreenToWorld(vec2))
+#define s_to_w(self, vec2) (self->camera->GetScreenToWorld(vec2))
+#define w_to_s(vec2) (this->camera->GetWorldToScreen(vec2))
+#define w_to_s(self, vec2) (self->camera->GetWorldToScreen(vec2))
+
 bool OverlayHoverHandle(MouseHitbox* self) {
   RVector2 mouse_pos = RMouse::GetPosition();
 
   bool first = self->rec.CheckCollision(mouse_pos);
-  bool second = std::ranges::none_of(self->exclude_recs, [mouse_pos](const RRectangle& r) { return r.CheckCollision(mouse_pos); });
+  bool second = std::ranges::none_of(self->exclude_recs, [self, mouse_pos](const RRectangle& rex) {
+    RRectangle determined_ex_rec = {
+        self->rec.GetPosition() + rex.GetPosition(),
+        rex.GetSize()
+    };
+
+    return determined_ex_rec.CheckCollision(mouse_pos);
+  });
 
   return first && second;
 }
 bool CameraHoverHandle(MouseHitbox* self) {
-  RVector2 mouse_pos = self->camera->GetScreenToWorld(RMouse::GetPosition());
+  RVector2 mouse_pos = s_to_w(self, RMouse::GetPosition());
   RRectangle determined_rec = {
-    self->camera->GetScreenToWorld(self->rec.GetPosition()),
-    self->camera->GetScreenToWorld(self->rec.GetSize())
+    s_to_w(self, self->rec.GetPosition()),
+    s_to_w(self, self->rec.GetSize())
   };
 
   bool first = determined_rec.CheckCollision(mouse_pos);
-  bool second = std::ranges::none_of(self->exclude_recs, [self, mouse_pos](const RRectangle& r) {
+  bool second = std::ranges::none_of(self->exclude_recs, [self, mouse_pos, determined_rec](const RRectangle& rex) {
     RRectangle determined_ex_rec = {
-        self->camera->GetScreenToWorld(self->rec.GetPosition()),
-        self->camera->GetScreenToWorld(self->rec.GetSize())
-      };
+        determined_rec.GetPosition() + s_to_w(self, rex.GetPosition()),
+        s_to_w(self, rex.GetSize())
+    };
 
     return determined_ex_rec.CheckCollision(mouse_pos);
   });
@@ -29,12 +43,6 @@ bool CameraHoverHandle(MouseHitbox* self) {
   return first && second;
 }
 
-
-bool MouseHitbox::DragHandle(int i) const {
-  if (!this->drag[i] && this->press[i]) return true;
-  if (this->drag[i] && !this->down[i]) return false;
-  return this->drag[i];
-}
 void OverlayHitboxTextureUpdate(MouseHitbox* self) {
   if (self->hitbox_texture.IsValid()) {
     self->hitbox_texture.Unload();
@@ -43,11 +51,16 @@ void OverlayHitboxTextureUpdate(MouseHitbox* self) {
   RImage temp_image = RImage::Color(self->rec.width, self->rec.height, RColor::Red().Fade(0.3));
 
   for (const RRectangle& rex : self->exclude_recs) {
+    RRectangle determined_ex_rec = {
+      self->rec.GetPosition() + rex.GetPosition(),
+      rex.GetSize()
+    };
+
     RRectangle localEx = {
-      rex.x - self->rec.x,
-      rex.y - self->rec.y,
-      rex.width,
-      rex.height
+      determined_ex_rec.x - self->rec.x,
+      determined_ex_rec.y - self->rec.y,
+      determined_ex_rec.width,
+      determined_ex_rec.height
     };
     temp_image.DrawRectangle(localEx, RColor::Blank());
   }
@@ -62,16 +75,16 @@ void CameraHitboxTextureUpdate(MouseHitbox* self) {
   }
 
   RRectangle determined_rec = {
-    self->camera->GetScreenToWorld(self->rec.GetPosition()),
-    self->camera->GetScreenToWorld(self->rec.GetSize())
+    s_to_w(self, self->rec.GetPosition()),
+    s_to_w(self, self->rec.GetSize())
   };
 
   RImage temp_image = RImage::Color(determined_rec.width, determined_rec.height, RColor::Red().Fade(0.3));
 
-  for (const RRectangle& rex : self->exclude_recs) {
+  for (const auto& rex : self->exclude_recs) {
     RRectangle determined_ex_rec = {
-      self->camera->GetScreenToWorld(rex.GetPosition()),
-      self->camera->GetScreenToWorld(rex.GetSize())
+      determined_rec.GetPosition() + s_to_w(self, rex.GetPosition()),
+      s_to_w(self, rex.GetSize())
     };
 
     RRectangle localEx = {
@@ -88,33 +101,28 @@ void CameraHitboxTextureUpdate(MouseHitbox* self) {
   self->hitbox_texture = std::move(texture);
 }
 
-
 void OverlayRender(MouseHitbox* self) {
-  self->hitbox_texture.Draw(
-    { 0, 0, self->rec.width, -self->rec.height },
-    self->rec.GetPosition(),
-    RColor::White()
-  );
+  RVector2 determined_pos = self->rec.GetPosition();
+
+  self->hitbox_texture.Draw(determined_pos, RColor::White());
 }
 void CameraRender(MouseHitbox* self) {
-  RRectangle determined_rec = {
-    self->camera->GetScreenToWorld(self->rec.GetPosition()),
-    self->camera->GetScreenToWorld(self->rec.GetSize())
-  };
+  RVector2 determined_pos = s_to_w(self, self->rec.GetPosition());
 
-  self->hitbox_texture.Draw(
-    { 0, 0, determined_rec.width, -determined_rec.height },
-    determined_rec.GetPosition(),
-    RColor::White()
-  );
+  self->hitbox_texture.Draw(determined_pos, RColor::White());
 }
 
 
+
+bool MouseHitbox::DragHandle(int i) const {
+  if (!this->drag[i] && this->press[i]) return true;
+  if (this->drag[i] && !this->down[i]) return false;
+  return this->drag[i];
+}
 
 void MouseHitbox::SetPosition(const RVector2 position) {
   this->rec.SetPosition(position);
 }
-
 
 MouseHitbox::MouseHitbox(const RCamera2D* camera, const RRectangle rec, const std::vector<RRectangle>& exclude_recs, bool overlay) {
   this->camera = camera;
@@ -155,5 +163,6 @@ void MouseHitbox::Update() {
   }
 }
 void MouseHitbox::Render() {
-  this->DeterminedRender(this);
+  if (Game::Instance().debug_mode)
+    this->DeterminedRender(this);
 }
