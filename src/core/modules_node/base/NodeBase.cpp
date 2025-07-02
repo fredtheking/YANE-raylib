@@ -28,10 +28,3 @@ void NodeBase::Update() {
 void NodeBase::Render() {
 
 }
-
-void NodeBase::AdditionalUpdate() {
-
-}
-void NodeBase::AdditionalRender() {
-
-}

@@ -12,16 +12,19 @@ protected:
   std::vector<NodePort> inputs;
   std::vector<NodePort> outputs;
 
-  NodeBase(const RCamera2D* camera);
+  explicit NodeBase(const RCamera2D* camera);
 
   void RecalculateRec();
 
-  void Init() override;
-  void Enter() override;
-  void Leave() override;
+  void Init() final;
+  void Enter() final;
+  void Leave() final;
   void Update() final;
   void Render() final;
 
+  virtual void AdditionalInit() = 0;
+  virtual void AdditionalEnter() = 0;
+  virtual void AdditionalLeave() = 0;
   virtual void AdditionalUpdate() = 0;
   virtual void AdditionalRender() = 0;
 };
