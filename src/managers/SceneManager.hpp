@@ -16,13 +16,13 @@ public:
   }
 
   size_t current_index = 0;
-  std::shared_ptr<SceneBase> current_scene = nullptr;
-  std::vector<std::shared_ptr<SceneBase>> scenes_collection = {};
+  SceneBase* current_scene = nullptr;
+  std::vector<std::unique_ptr<SceneBase>> scenes_collection = {};
 
   void Previous();
   void Next();
 
-  void Add(std::shared_ptr<SceneBase> scene);
+  void Add(std::unique_ptr<SceneBase> scene);
   void Change(int scene_id);
   void Change(std::string scene_name);
 };

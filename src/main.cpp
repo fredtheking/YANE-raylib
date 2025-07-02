@@ -5,7 +5,7 @@
 #include "scenes/TestScene.hpp"
 
 int main(){
-  Registry::AddScene(std::make_shared<TestScene>());
-  Registry::AddScene(std::make_shared<GameScene>());
+  Registry::AddScene(std::make_unique<TestScene>());
+  Registry::AddScene(std::make_unique<GameScene>());
   Game::Instance().Run(1);
 }

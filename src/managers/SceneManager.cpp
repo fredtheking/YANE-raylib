@@ -17,14 +17,16 @@ void SceneManager::Next() {
   Change(current_index);
 }
 
-void SceneManager::Add(std::shared_ptr<SceneBase> scene) {
-  this->scenes_collection.push_back(scene);
+void SceneManager::Add(std::unique_ptr<SceneBase> scene) {
+  this->scenes_collection.push_back(std::move(scene));
 }
 
 void SceneManager::Change(int scene_id) {
   PendingChangesManager::Instance().Add([this, scene_id]() -> void {
+    if (this->current_scene != nullptr) this->current_scene->Leave();
     this->current_index = scene_id;
-    this->current_scene = scenes_collection[scene_id];
+    this->current_scene = scenes_collection[scene_id].get();
+    this->current_scene->Enter();
   });
 }
 void SceneManager::Change(std::string scene_name) {

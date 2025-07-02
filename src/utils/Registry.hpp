@@ -4,5 +4,5 @@
 
 class Registry {
 public:
-  static void AddScene(std::shared_ptr<SceneBase> scene);
+  static void AddScene(std::unique_ptr<SceneBase> scene);
 };

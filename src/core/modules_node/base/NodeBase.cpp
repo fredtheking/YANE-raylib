@@ -1,6 +1,5 @@
 #include "NodeBase.hpp"
 
-
 void NodeBase::RecalculateRec() {
   this->translated_rec = RRectangle(
     this->camera->GetScreenToWorld(this->rec.GetPosition()),
@@ -9,7 +8,7 @@ void NodeBase::RecalculateRec() {
 }
 
 
-NodeBase::NodeBase(const RCamera2D* camera) : UuidObject() {
+NodeBase::NodeBase(const RCamera2D* camera) {
   this->camera = camera;
 }
 void NodeBase::Init() {

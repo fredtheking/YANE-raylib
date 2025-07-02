@@ -3,10 +3,7 @@
 
 #include "../Game.hpp"
 
-#define s_to_w(vec2) (this->camera->GetScreenToWorld(vec2))
 #define s_to_w(self, vec2) (self->camera->GetScreenToWorld(vec2))
-#define w_to_s(vec2) (this->camera->GetWorldToScreen(vec2))
-#define w_to_s(self, vec2) (self->camera->GetWorldToScreen(vec2))
 
 bool OverlayHoverHandle(MouseHitbox* self) {
   RVector2 mouse_pos = RMouse::GetPosition();

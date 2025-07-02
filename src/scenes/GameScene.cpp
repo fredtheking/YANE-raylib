@@ -1,8 +1,5 @@
 #include "GameScene.hpp"
-
 #include <algorithm>
-
-#include "../Game.hpp"
 #include "../core/NodeEngine.hpp"
 
 Vector2& operator+=(Vector2& lhs, const RVector2& rhs) {
@@ -11,7 +8,7 @@ Vector2& operator+=(Vector2& lhs, const RVector2& rhs) {
   return lhs;
 }
 
-NodeEngine node_engine = {RColor::Black(), RColor{13, 13, 13}};
+NodeEngine node_engine(RColor::Black(), RColor{13, 13, 13});
 RVector2 drag_origin_world;
 
 void MoveCamera(RCamera2D& camera) {

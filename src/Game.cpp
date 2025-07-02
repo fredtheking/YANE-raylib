@@ -2,6 +2,7 @@
 
 #include "managers/PendingChangesManager.hpp"
 #include "managers/SceneManager.hpp"
+#include "utils/Constants.hpp"
 
 #if defined(_DEBUG) || !defined(NDEBUG)
     #define only_debug(...) do { __VA_ARGS__ } while (0)
@@ -12,13 +13,13 @@
 
 void Game::Setup(size_t start_scene_index) {
   this->window->SetConfigFlags(FLAG_WINDOW_ALWAYS_RUN | FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
-  this->window = new RWindow(1920, 1080, "Node Editor");
+  this->window = new RWindow(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT, "Node Editor");
   this->audioDevice = new RAudioDevice();
-  //this->window->SetTargetFPS(60);
+  this->window->SetTargetFPS(Constants::FPS_LIMIT);
 
   only_debug( this->debug_mode = true; );
 
-  for (const std::shared_ptr<SceneBase>& scene: SceneManager::Instance().scenes_collection) {
+  for (const std::unique_ptr<SceneBase>& scene: SceneManager::Instance().scenes_collection) {
     scene->InitName();
     scene->Init();
   }

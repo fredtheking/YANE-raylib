@@ -1,5 +1,6 @@
 #include "NodeEngine.hpp"
 #include "../Game.hpp"
+#include "../utils/Constants.hpp"
 
 static RVector2 GetCameraNewOffset() {
   return Game::Instance().window->GetSize()/2;
@@ -22,6 +23,8 @@ void NodeEngine::DrawViewportBackground() const {
 }
 
 void NodeEngine::DrawViewportGrid2D() const {
+  static constexpr float GRID_SPACING = Constants::GRID_SPACING;
+
   Vector2 topLeft = this->camera.GetScreenToWorld(RVector2::Zero());
   Vector2 bottomRight = this->camera.GetScreenToWorld(Game::Instance().window->GetSize());
 
@@ -82,6 +85,7 @@ void NodeEngine::Enter() {
 }
 void NodeEngine::Leave() {
   infobar.Leave();
+  ResetCamera();
 }
 
 void NodeEngine::Update() {
